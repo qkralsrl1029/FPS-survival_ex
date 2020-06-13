@@ -12,15 +12,22 @@ public class playerScript : MonoBehaviour
     [SerializeField] float crouchSpeed;     //앉기 속도
     float currentCameraRotationX = 0;
     float applySpeed;   //걷기or뛸때 변하는 이동속도를 한번에 담아줄 변수
+
+    bool isWalk = false;
     bool isRun = false;
     bool isGrounded = true;
     bool isCrouch = false;
+    Vector3 lastPos;        //움직임체크 변수
+
+
     [SerializeField] float crouchPosY;
     float originPosY;
     float applyCrouch;      //앉기or일어날때 변하는 높이를 한번에 담아줄 변수
    
 
     Rigidbody rigid;
+    CrosshairScript theCrosshair;
+    GunController theGuncontroller;
     [SerializeField] Camera theCamera;
 
 
@@ -28,6 +35,8 @@ public class playerScript : MonoBehaviour
     void Start()
     {
         rigid = GetComponent<Rigidbody>();      //rigidbody컴퍼넌트를 기존 설정한 rigid변수에 할당
+        theCrosshair = FindObjectOfType<CrosshairScript>(); //하이레키창에서 선언한 타입에 맞는 옵젝을 찾아서 넣어줌
+        theGuncontroller = FindObjectOfType<GunController>();
         applySpeed = walkSpeed;
         originPosY = theCamera.transform.localPosition.y;       //카메라가 player에 상속되어 있기때문에 localposition사용
         applyCrouch = originPosY;
@@ -42,6 +51,7 @@ public class playerScript : MonoBehaviour
         Move();
         cameraRatation();
         characterRotation();
+        MoveCheck();
     }
 
     void TryCrouch()
@@ -54,6 +64,8 @@ public class playerScript : MonoBehaviour
         {
             isCrouch = false;
         }
+
+        theCrosshair.CrouchingAnimation(isCrouch);  //앉아있는상태에 맞는 크로스헤어 실행 
         if(isCrouch)
         {
             applySpeed = crouchSpeed;
@@ -73,7 +85,7 @@ public class playerScript : MonoBehaviour
 
     }
 
-    IEnumerator CrouchCoroutine()       //병렬적 실행 함수
+    IEnumerator CrouchCoroutine()       //병렬적 실행 함수, 앉기모드
     {
         int count = 0;
         float _posY = theCamera.transform.localPosition.y;
@@ -95,32 +107,38 @@ public class playerScript : MonoBehaviour
         {
             if (isGrounded)
             {
-                rigid.velocity = transform.up * jumpForce;
+                rigid.velocity = transform.up * jumpForce;               
                 isGrounded = false;
             }
+            //뛸때 크로스헤어 변하는 로직 구현하기
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Ground")
-            isGrounded = true;
+            isGrounded = true;       
     }
 
     void IsRun()
     {
-        if (!isCrouch)
+        if (!isCrouch)      //앉아있을때는 못뜀
         {
             if (Input.GetKey(KeyCode.LeftShift))
             {
+                theGuncontroller.CancelFineSight();     //정조준상태일경우 해제
                 isRun = true;
                 applySpeed = runSpeed;
+
+                theCrosshair.RunningAnimation(isRun);   //뛰고있을경우 그에맞는 크로스헤어 변경
             }
         }
         if(Input.GetKeyUp(KeyCode.LeftShift))
         {
             isRun = false;
             applySpeed = walkSpeed;
+
+            theCrosshair.RunningAnimation(isRun);
         }
     }
 
@@ -136,6 +154,28 @@ public class playerScript : MonoBehaviour
 
         rigid.MovePosition(this.transform.position + _velocity * Time.deltaTime);
     }
+
+    void MoveCheck()        //크로스헤어 최신화를 위한 움직임체크 함수
+    {
+        if (!isRun&&!isCrouch)     //달릴때나 앉아있을땐 굳이 체크X
+        {
+            //if (Vector3.Distance(lastPos,this.transform.position)>=0.01f)    //이전 위치와 현대위치가 다르다면?-->움직였다고 간주. 단 일정 여유를 줘서 경사로에서 미끄러지는 등에 대한 예외처리
+            //    isWalk = true;
+            //else
+            //    isWalk = false;
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+                isWalk = true;
+            else if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D))
+                isWalk = false;
+           
+
+            theCrosshair.WalkingAnimation(isWalk);      //걷고있는지 상태에 따라 알맞은 애니메이션 파라매터값 전달
+            lastPos = this.transform.position;
+        }
+    }
+
+    
+
 
     void cameraRatation()
     {
@@ -153,4 +193,7 @@ public class playerScript : MonoBehaviour
         Vector3 _characterRotationY = new Vector3(0, _yRotation, 0)*lookSensitivity;
         rigid.MoveRotation(rigid.rotation * Quaternion.Euler(_characterRotationY));
     }
+
+    
+
 }

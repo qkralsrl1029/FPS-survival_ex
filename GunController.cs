@@ -14,10 +14,12 @@ public class GunController : MonoBehaviour
     RaycastHit hitInfo;             //총알발사시 피격대상 정보저장변수
     [SerializeField] Camera theCam;     //총알이 1인칭 시점에 맞게 플레이어기준 가운데에서 발사되도록 그 화면을 가져옴
     [SerializeField] GameObject hitEffect;  //피격이펙트
+    CrosshairScript theCrosshair;
 
     private void Start()
     {
         theAudio = GetComponent<AudioSource>();
+        theCrosshair = FindObjectOfType<CrosshairScript>();
        
     }
     // Update is called once per frame
@@ -61,6 +63,8 @@ public class GunController : MonoBehaviour
 
     void Shoot()
     {
+        theCrosshair.ShootingAnimation();           //발사시 플레이어의 상태에 따른(idle,walk,crouch) 크로스헤어 애니메이션 실행
+
         currentGun.currentBulletCount--;            //발사할때마다 현재 탄알집의 총알 --
         currentFireRate = currentGun.fireRate;      //연사속도 재계산
         playSE(currentGun.fireSound); 
@@ -73,15 +77,18 @@ public class GunController : MonoBehaviour
 
     void Hit()      //피격 이벤트. 총알 오브젝트를 생성하지않고 그 효과만 줌.
     {
-        if(Physics.Raycast(theCam.transform.position,theCam.transform.forward,out hitInfo,currentGun.range))
+        if(Physics.Raycast(theCam.transform.position,
+            theCam.transform.forward+new Vector3(Random.Range(-theCrosshair.GetAccuracy()-currentGun.accuracy, theCrosshair.GetAccuracy() + currentGun.accuracy), Random.Range(-theCrosshair.GetAccuracy() - currentGun.accuracy, theCrosshair.GetAccuracy() + currentGun.accuracy),0)
+            ,out hitInfo,currentGun.range))
         {
+            //if문 안에 두번째 조건은 플레이어의 행동에 따라(walk,run,idle,fineSight,couch) 정확도를 달리하여 피격당하는 위치에 랜덤값을 줌
             //발사 위치는 절대값이므로 월드좌표계 사용
             var clone=Instantiate(hitEffect, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
             //프리팹생성, .point-->실제 좌표, lookRatation-->피격당한 방형으로 이펙트 생성
             Destroy(clone, 2f);
             //메모리 관리를위해 일정 시간후 이펙트 제거
         }
-    }
+    } 
 
     void playSE(AudioClip _clip)
     {
@@ -136,7 +143,7 @@ public class GunController : MonoBehaviour
         }
     }
 
-    void CancelFineSight()
+    public void CancelFineSight()
     {
         if (isFineMode)
             FineSight();
@@ -146,6 +153,7 @@ public class GunController : MonoBehaviour
     {
         isFineMode = !isFineMode;   //함수 두개만들필요 없이 참이면 거짓,거짓이면 참 반환
         currentGun.anim.SetBool("FineSight", isFineMode);       //trigger를 쓰면 참 상태일때 애니메이션이 계속 실행됨.
+        theCrosshair.FinrSightAnimation(isFineMode);            //정조준모드 상태에 따라 크로스헤어 애니메이션 실행
         if(isFineMode)
         {
             StopAllCoroutines();        //lerp함수는 근사치기 때문에 while문 안에서 끝나지않음. 따라서 정조준이 반복될경우 기존 실행되고있던 정조준 관련 함수들이 중복되어 이상한 position값을 가지게됨
@@ -218,5 +226,9 @@ public class GunController : MonoBehaviour
     public GunScript GetGun()
     {
         return currentGun;
+    }
+    public bool GetFinesightMode()
+    {
+        return isFineMode;
     }
 }
