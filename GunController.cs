@@ -9,7 +9,7 @@ public class GunController : MonoBehaviour
 
     float currentFireRate;          //연사속도
     bool isReload = false;          //재장전상태
-    bool isFineMode = false;        //정조준상태
+    public bool isFineMode = false;        //정조준상태
     AudioSource theAudio;
     RaycastHit hitInfo;             //총알발사시 피격대상 정보저장변수
     [SerializeField] Camera theCam;     //총알이 1인칭 시점에 맞게 플레이어기준 가운데에서 발사되도록 그 화면을 가져옴
@@ -90,7 +90,7 @@ public class GunController : MonoBehaviour
             //if문 안에 두번째 조건은 플레이어의 행동에 따라(walk,run,idle,fineSight,couch) 정확도를 달리하여 피격당하는 위치에 랜덤값을 줌
             //발사 위치는 절대값이므로 월드좌표계 사용
             var clone=Instantiate(hitEffect, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-            //프리팹생성, .point-->실제 좌표, lookRatation-->피격당한 방형으로 이펙트 생성
+            //프리팹생성, .point-->실제 좌표, lookRatation-->피격당한 방향으로 이펙트 생성
             Destroy(clone, 2f);
             //메모리 관리를위해 일정 시간후 이펙트 제거
         }
@@ -104,7 +104,7 @@ public class GunController : MonoBehaviour
 
     void TryReload()        //수동 재장전
     {
-        //r키가 눌렸을때, 재장전중이 아니고 탄알집이 가듲찬 상태가 아니라면 재장전.
+        //r키가 눌렸을때, 재장전중이 아니고 탄알집이 가득찬 상태가 아니라면 재장전.
         if(Input.GetKeyDown(KeyCode.R)&&!isReload&&currentGun.currentBulletCount<currentGun.reloadBulletCount)
         {
             CancelFineSight();      //정조준중이면 정조준 해제
@@ -123,23 +123,23 @@ public class GunController : MonoBehaviour
 
     IEnumerator ReloadCoroutine()       //재장전시 애니메이션상으로는 재장전 모션이 있지만 프로그램 상으로는 매우 빠른 시간 안에 일어나기때문에 재장전과 발사가 동시에 일어남. 이를 방지하기위해 코루틴 사용
     {
-        if(currentGun.carryBulletCount>0)
+        if(currentGun.carryBulletCount>0)       //가지고 있는총알이 0보다 크면
         {
-            isReload = true;
-            currentGun.anim.SetTrigger("Reload");
+            isReload = true;                    //일단 장전상태를 참으로 바꾸고
+            currentGun.anim.SetTrigger("Reload");      //재장전 애니메이션 실행
 
             currentGun.carryBulletCount += currentGun.currentBulletCount;   //현재 소유한 총알을 버리지않고 재장전시 사용하는듯한 효과. 개인적으로 짧고 쉬운 코드인데 굉장히 신선하고 좋았음. 이렇게도 짤수있구나
             currentGun.currentBulletCount = 0;
             yield return new WaitForSeconds(currentGun.reloadTime);
 
-            if(currentGun.carryBulletCount>=currentGun.reloadBulletCount)
+            if(currentGun.carryBulletCount>=currentGun.reloadBulletCount)   //가지고 있는 총알이 재장전될 총알보다 크면
             {
-                currentGun.currentBulletCount = currentGun.reloadBulletCount;
+                currentGun.currentBulletCount = currentGun.reloadBulletCount;   //현재총알을 꽉채우고 가지고 있는 총알에서 그 수만큼 빼기
                 currentGun.carryBulletCount -= currentGun.reloadBulletCount;
             }
             else
             {
-                currentGun.currentBulletCount = currentGun.carryBulletCount;
+                currentGun.currentBulletCount = currentGun.carryBulletCount;    //아니라면 현재총알을 총 가지고있던 총알로 바꾸고 보유량을 0으로 바꾸기
                 currentGun.carryBulletCount = 0;
             }
 
@@ -200,7 +200,7 @@ public class GunController : MonoBehaviour
         }
     }
 
-    IEnumerator RetroActionCoroutine()
+    IEnumerator RetroActionCoroutine()      //반동 애니메이션
     {
         Vector3 recoilBack=new Vector3(currentGun.retroActionForce,originPos.y,originPos.z) ;     //정조준안했을때 최대반동
         Vector3 retroActionRecoilBack=new Vector3(currentGun.retroActionFineSightForce,currentGun.fineSightOriginPos.y,currentGun.fineSightOriginPos.z) ;      //정조준했을때 최대반동

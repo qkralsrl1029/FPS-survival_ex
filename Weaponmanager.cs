@@ -31,6 +31,7 @@ public class Weaponmanager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //딕셔너리 컬렉션에 총 무기 수만큼 Add
         for (int i = 0; i < guns.Length; i++)
         {
             gunDictionary.Add(guns[i].gunName, guns[i]);
@@ -44,7 +45,7 @@ public class Weaponmanager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isChangeWeapon)
+        if(!isChangeWeapon)     //무기 변경중이 아니라면
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
                 StartCoroutine(ChangeWeaponCoroutine("HAND", "맨손"));
@@ -54,9 +55,9 @@ public class Weaponmanager : MonoBehaviour
         }
     }
 
-    public IEnumerator ChangeWeaponCoroutine(string _type,string _name)
+    public IEnumerator ChangeWeaponCoroutine(string _type,string _name)     //무기교체 코루틴
     {
-        isChangeWeapon = true;
+        isChangeWeapon = true;                                             //무기교체중...
         currentWeaponAnim.SetTrigger("Weapon_Out");
 
         yield return new WaitForSeconds(changeWeaponDelayTime);         //일정 시간 대기(총 집어넣는 애니메이션 실행)
