@@ -16,21 +16,27 @@ public class GunController : MonoBehaviour
     [SerializeField] GameObject hitEffect;  //피격이펙트
     CrosshairScript theCrosshair;
 
+    public static bool isActivate = true;
+
     private void Start()
     {
         theAudio = GetComponent<AudioSource>();
         theCrosshair = FindObjectOfType<CrosshairScript>();
-       
+
+        Weaponmanager.currentWeapon = currentGun.GetComponent<Transform>();
+        Weaponmanager.currentWeaponAnim = currentGun.anim;
     }
     // Update is called once per frame
     void Update()
     {
-        GunFireRateCalc();
-        TryFire();
-        TryReload();
-        TryFineSight();
+        if (isActivate)
+        {
+            GunFireRateCalc();
+            TryFire();
+            TryReload();
+            TryFineSight();
+        }
     }
-
    
 
     void GunFireRateCalc()      //연사속도에 맞게 발사하기 위해서 정해진 연사속도주기로 발사될수있게 변수 설정
@@ -105,6 +111,16 @@ public class GunController : MonoBehaviour
             StartCoroutine(ReloadCoroutine());
         }
     }
+            
+    public void CancelReload()     //재장전 중지(무기 교체시 호출)
+    {
+        if(isReload)
+        {
+            StopAllCoroutines();
+            isReload = false;
+        }
+    }
+
     IEnumerator ReloadCoroutine()       //재장전시 애니메이션상으로는 재장전 모션이 있지만 프로그램 상으로는 매우 빠른 시간 안에 일어나기때문에 재장전과 발사가 동시에 일어남. 이를 방지하기위해 코루틴 사용
     {
         if(currentGun.carryBulletCount>0)
@@ -230,5 +246,21 @@ public class GunController : MonoBehaviour
     public bool GetFinesightMode()
     {
         return isFineMode;
+    }
+
+    public void GunChange(GunScript _gun)       //무기교체
+    {
+        if(Weaponmanager.currentWeapon!=null)   //무기를 바꾸려 하는데 기존에 들고있는 무기가 있다면 비활성화, static으로 선언해두었기 때문에 별도의 객체를 생성하지 않아도 사용 가능
+        {
+            Weaponmanager.currentWeapon.gameObject.SetActive(false);
+        }
+        currentGun = _gun;
+        Weaponmanager.currentWeapon = currentGun.GetComponent<Transform>();     //이건 .transform과 뭐가 다른거지??
+        Weaponmanager.currentWeaponAnim = currentGun.anim;
+
+        currentGun.transform.localPosition = Vector3.zero;      //총의 경우 정조준 모드가 있기때문에 위치가 변하는것을 막기위해 호출시 위치 초기화
+        currentGun.gameObject.SetActive(true);
+
+        isActivate = true;
     }
 }

@@ -11,11 +11,14 @@ public class HandController : MonoBehaviour
     bool isSwing = false;
     RaycastHit hitInfo; //가상의 레이저를 발사해서 닿은 물체의 정보를 저장
 
+    public static bool isActivate = false;
+
 
     // Update is called once per frame
     void Update()
     {
-        TryAttack();
+        if(isActivate)
+            TryAttack();
     }
 
     void TryAttack()
@@ -66,5 +69,21 @@ public class HandController : MonoBehaviour
         }
         else
             return false; 
+    }
+
+    public void HandChange(HandAnim _hand)      //무기교체
+    {
+        if (Weaponmanager.currentWeapon != null)   //무기를 바꾸려 하는데 기존에 들고있는 무기가 있다면 비활성화, static으로 선언해두었기 때문에 별도의 객체를 생성하지 않아도 사용 가능
+        {
+            Weaponmanager.currentWeapon.gameObject.SetActive(false);
+        }
+        currentHand = _hand;
+        Weaponmanager.currentWeapon = currentHand.GetComponent<Transform>();     //이건 .transform과 뭐가 다른거지??
+        Weaponmanager.currentWeaponAnim = currentHand.anim;
+
+        currentHand.transform.localPosition = new Vector3(0.12f,-0.72f,-0.61f);
+        currentHand.gameObject.SetActive(true);
+
+        isActivate = true;
     }
 }

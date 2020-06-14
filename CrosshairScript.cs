@@ -17,10 +17,12 @@ public class CrosshairScript : MonoBehaviour
     //playerScript에서 호출할 예정. 왜냐면 플레이어의 상태변화는 playerScript에서 관리하기때문.
    public void WalkingAnimation(bool _flag)
     {
+        Weaponmanager.currentWeaponAnim.SetBool("Walk", _flag);
         anim.SetBool("isWalk", _flag);
     }
     public void RunningAnimation(bool _flag)
     {
+        Weaponmanager.currentWeaponAnim.SetBool("Run", _flag);
         anim.SetBool("isRun", _flag);
     }
     public void CrouchingAnimation(bool _flag)
