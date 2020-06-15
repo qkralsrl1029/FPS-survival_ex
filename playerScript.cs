@@ -14,7 +14,7 @@ public class playerScript : MonoBehaviour
     float applySpeed;   //걷기or뛸때 변하는 이동속도를 한번에 담아줄 변수
 
     bool isWalk = false;
-    bool isRun = false;
+    public static bool isRun = false;
     bool isGrounded = true;
     bool isCrouch = false;
     Vector3 lastPos;        //움직임체크 변수

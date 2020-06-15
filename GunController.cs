@@ -55,7 +55,7 @@ public class GunController : MonoBehaviour
 
     void Fire()                
     {
-        if(!isReload)
+        if(!isReload&&!playerScript.isRun)
         {
             if (currentGun.currentBulletCount <= 0)      //탄알집의 총알이 0보다 클때만 발사, 아니면 재장전      
             {
