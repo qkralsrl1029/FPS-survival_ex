@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class CloseWeaponController : MonoBehaviour
+public abstract class CloseWeaponController : MonoBehaviour     //근접무기들의 공통된 부분들의 코드들을 재활용하기위하여 만들어진 부모객체, 각 자식클래스마다 기능이 다르므로 추상 클래스로 구현되었다.
 {
     [SerializeField] protected HandAnim currentCloseWeapon;
 
@@ -23,7 +23,7 @@ public abstract class CloseWeaponController : MonoBehaviour
 
     protected void TryAttack()
     {
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButton("Fire1"))       //마우스 버튼 클릭&&공격중이 아닐때
         {
             if (!isAttack)
             {

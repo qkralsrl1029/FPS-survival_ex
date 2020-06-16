@@ -75,7 +75,7 @@ public class Weaponmanager : MonoBehaviour
     public IEnumerator ChangeWeaponCoroutine(string _type,string _name)     //무기교체 코루틴
     {
         isChangeWeapon = true;                                             //무기교체중...
-        currentWeaponAnim.SetTrigger("Weapon_Out");
+        currentWeaponAnim.SetTrigger("Weapon_Out");                         //처음에들고 있는 무기는 일단 총으로 설정, 건컨트롤러start함수에 초기화선언문 있음
 
         yield return new WaitForSeconds(changeWeaponDelayTime);         //일정 시간 대기(총 집어넣는 애니메이션 실행)
 
