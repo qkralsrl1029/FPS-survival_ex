@@ -28,6 +28,7 @@ public class playerScript : MonoBehaviour
     Rigidbody rigid;
     CrosshairScript theCrosshair;
     GunController theGuncontroller;
+    StatusController theStatusController;       //플레이어가 걷거나 뛰는등의 행동을 하면 플레이어의 sp를 닳게할 함수를 호출
     [SerializeField] Camera theCamera;
 
 
@@ -37,6 +38,7 @@ public class playerScript : MonoBehaviour
         rigid = GetComponent<Rigidbody>();      //rigidbody컴퍼넌트를 기존 설정한 rigid변수에 할당
         theCrosshair = FindObjectOfType<CrosshairScript>(); //하이레키창에서 선언한 타입에 맞는 옵젝을 찾아서 넣어줌
         theGuncontroller = FindObjectOfType<GunController>();
+        theStatusController = FindObjectOfType<StatusController>();
         applySpeed = walkSpeed;
         originPosY = theCamera.transform.localPosition.y;       //카메라가 player에 상속되어 있기때문에 localposition사용
         applyCrouch = originPosY;
@@ -109,6 +111,7 @@ public class playerScript : MonoBehaviour
             {
                 rigid.velocity = transform.up * jumpForce;               
                 isGrounded = false;
+                theStatusController.DecreaseStamina(50);
             }
             //뛸때 크로스헤어 변하는 로직 구현하기
         }
@@ -129,7 +132,7 @@ public class playerScript : MonoBehaviour
                 theGuncontroller.CancelFineSight();     //정조준상태일경우 해제
                 isRun = true;
                 applySpeed = runSpeed;
-
+                theStatusController.DecreaseStamina(10);
                 theCrosshair.RunningAnimation(isRun);   //뛰고있을경우 그에맞는 크로스헤어 변경
             }
         }

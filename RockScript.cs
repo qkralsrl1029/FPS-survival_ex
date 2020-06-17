@@ -22,7 +22,7 @@ public class RockScript : MonoBehaviour
 
     public void Mining()
     {
-        SoundManager.instance.PlaySE(strikeSound);      //static으로 선언된 instanse의 play함수를 객체생성하지않고 바로사용
+        SoundManager.instance.PlaySE(strikeSound);      //static으로 선언된 instanse의 play함수를 객체생성하지않고 바로사용 
 
         var clone=Instantiate(go_effectPrefabs,col.bounds.center,Quaternion.identity);
         Destroy(clone, destroyTime);
