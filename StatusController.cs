@@ -50,7 +50,7 @@ public class StatusController : MonoBehaviour
         Hungry();
         Thirsty();
         gagueUpdate();
-        spRecharge();
+        spRecharge(); 
     }
 
     void Hungry()
@@ -65,8 +65,7 @@ public class StatusController : MonoBehaviour
                 currentHungryDecrease = 0;
             }
         }
-        else
-            Debug.Log("배고픔 0");
+        
     }
 
     void Thirsty()
@@ -81,8 +80,7 @@ public class StatusController : MonoBehaviour
                 currentThirstyDecrease = 0;
             }
         }
-        else
-            Debug.Log("목마름 0");
+       
     }
 
     public void DecreaseStamina(int _count)
@@ -111,6 +109,85 @@ public class StatusController : MonoBehaviour
                 currentSp += spIncreaseSpeed;
         }
     }
+
+    public int getCurrentSp() { return currentSp; }     //걷거나 뛰기등의 동작을 할때 sp를 비교해서 동작을 수행하기 위해 playerScript에서 호출
+
+
+    //Hp 증감
+    public void IncreaseHp(int _count)
+    {
+        if (currentHp + _count <= hp)
+            currentHp += _count;
+        else
+            currentHp = hp;
+    }
+
+    public void DecreaseHp(int _count)
+    {
+        if(currentDp>0)
+        { DecreaseDp(_count);return; }
+
+        if (currentHp - _count > 0)
+            currentHp -= _count;
+        else
+            Debug.Log("캐릭터 사망");
+    }
+
+    //Dp 증감
+    public void IncreaseDp(int _count)
+    {
+        if (currentDp + _count <= dp)
+            currentDp += _count;
+        else
+            currentDp = dp;
+    }
+
+    public void DecreaseDp(int _count)
+    {
+        if (currentDp - _count> 0)
+            currentDp -= _count;
+        else
+            Debug.Log("Dp 0");
+    }
+
+    //배고픔 증감
+    public void IncreaseHunger(int _count)
+    {
+        if (currentHunger + _count <= hunger)
+            currentHunger += _count;
+        else
+            currentHunger = hunger;
+    }
+
+    public void DecreaseHunger(int _count)
+    {
+        if (currentHunger - _count > 0)
+            currentHunger -= _count;
+        else
+            currentHunger = 0;
+        
+    }
+
+    //목마름 증감
+    public void IncreaseThirsty(int _count)
+    {
+        if (currentThirsty + _count <= thirsty)
+            currentThirsty += _count;
+        else
+            currentThirsty = thirsty;
+    }
+
+    public void DecreaseThirsty(int _count)
+    {
+        if (currentThirsty - _count > 0)
+            currentThirsty -= _count;
+        else
+            currentThirsty = 0;
+
+    }
+
+
+
 
     void gagueUpdate()                      //플레이어 스테이터스 변수에 따른 이미지 가시화, fillamount를 통해 백분율로 변환된 스테이터스 값들을 기존 설정한 이미지 배열에 각각 넣어줌
     {

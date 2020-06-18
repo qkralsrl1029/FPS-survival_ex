@@ -107,7 +107,7 @@ public class playerScript : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGrounded)
+            if (isGrounded&&theStatusController.getCurrentSp()>0)
             {
                 rigid.velocity = transform.up * jumpForce;               
                 isGrounded = false;
@@ -127,7 +127,7 @@ public class playerScript : MonoBehaviour
     {
         if (!isCrouch)      //앉아있을때는 못뜀
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift)&& theStatusController.getCurrentSp() > 0)   //sp가 0보다 클때만
             {
                 theGuncontroller.CancelFineSight();     //정조준상태일경우 해제
                 isRun = true;
@@ -136,7 +136,7 @@ public class playerScript : MonoBehaviour
                 theCrosshair.RunningAnimation(isRun);   //뛰고있을경우 그에맞는 크로스헤어 변경
             }
         }
-        if(Input.GetKeyUp(KeyCode.LeftShift))
+        if(Input.GetKeyUp(KeyCode.LeftShift)|| theStatusController.getCurrentSp() <=0)  //뛰는도중 sp가 0보다 작아졌을때 뛰기 취소
         {
             isRun = false;
             applySpeed = walkSpeed;
