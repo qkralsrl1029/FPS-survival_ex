@@ -133,6 +133,26 @@ public class StatusController : MonoBehaviour
             Debug.Log("캐릭터 사망");
     }
 
+    //Sp 증감
+    public void IncreaseSp(int _count)
+    {
+        if (currentSp + _count <= sp)
+            currentSp += _count;
+        else
+            currentSp = sp;
+    }
+
+    public void DecreaseSp(int _count)
+    {
+        if (currentSp > 0)
+        { DecreaseSp(_count); return; }
+
+        if (currentSp - _count > 0)
+            currentSp -= _count;
+        else
+            Debug.Log("SP 0");
+    }
+
     //Dp 증감
     public void IncreaseDp(int _count)
     {

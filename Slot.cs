@@ -5,7 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 
-public class Slot : MonoBehaviour, IPointerClickHandler,IBeginDragHandler,IDragHandler,IEndDragHandler,IDropHandler //다중상속 구현이 가능한 인터페이스 사용(마우스 클릭이벤트)
+public class Slot : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler, IPointerClickHandler,IBeginDragHandler,IDragHandler,IEndDragHandler,IDropHandler //다중상속 구현이 가능한 인터페이스 사용(마우스 클릭이벤트)
+    //마우스 엔터/엑시트, 마우스 클릭, 마우스 드래그, 마우스 입력 종료, 마우스 드록(순서대로)
 {
     public Item item;
     public int itemCount;
@@ -13,12 +14,15 @@ public class Slot : MonoBehaviour, IPointerClickHandler,IBeginDragHandler,IDragH
     [SerializeField] Text countText;
     [SerializeField] GameObject go_CountImage;
     
+    
 
-    Weaponmanager theWeaponmanager;     //인벤토리 내 장비 장착시에 필요
+   
+    ItemEffects theItemEffect;      //아이템 사용시 호출
 
     private void Start()
     {
-        theWeaponmanager = FindObjectOfType<Weaponmanager>();       //slot자체가 프리팹이기 때문에 , 시리얼라이즈 필드는 자기자신안에있는 객체만 참조 가능/하이래키에있는 것들은 참조 불가능(instantiate로 생성된 것들 한정)
+        theItemEffect = FindObjectOfType<ItemEffects>();
+        
     }
 
 
@@ -84,7 +88,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler,IBeginDragHandler,IDragH
     }
 
 
-    //슬롯 창 내에서 이벤트를 감지하는 인터페이스 5종(우클릭, 좌클릭 시작, 좌클릭 드래그, 드래그 종료, 드랍)
+    //슬롯 창 내에서 이벤트를 감지하는 인터페이스 7종(우클릭, 좌클릭 시작, 좌클릭 드래그, 드래그 종료, 드랍, 엔터 , 엑싯)
 
 
     public void OnPointerClick(PointerEventData eventData)
@@ -92,16 +96,10 @@ public class Slot : MonoBehaviour, IPointerClickHandler,IBeginDragHandler,IDragH
         if(eventData.button==PointerEventData.InputButton.Right)        //해당스크립트가 적용된 객체안에서 마우스버튼이 클릭되면
         {
             if(item!=null)
-            {
-                if(item.itemType==Item.ItemType.Equipment)              //장비형 아이템    
-                {
-                    StartCoroutine(theWeaponmanager.ChangeWeaponCoroutine(item.weaponType, item.itemName)); 
-                }
-                else                                                    //소모형 아이템
-                {
+            {                               
+                theItemEffect.useItem(item);
+                if(item.itemType==Item.ItemType.Used)
                     setSlot(-1);
-                }
-               
             }
         }
     }
@@ -133,5 +131,16 @@ public class Slot : MonoBehaviour, IPointerClickHandler,IBeginDragHandler,IDragH
     {
         if(DragSlot.instance.dragSlot!=null)
             ChangeSlot();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)      //마우스가 슬롯 안으로 들어오면 해당 아이템 설명 띄우기
+    {
+        if(item!=null)
+            theItemEffect.showTooltip(item,this.transform.position);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)       //나가면 설명창 비활성화
+    {
+            theItemEffect.hideTooltip();
     }
 }

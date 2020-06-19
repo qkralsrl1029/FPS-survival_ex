@@ -8,6 +8,8 @@ public class Item : ScriptableObject    //모노비헤이비어와 다르게 옵
 {
 
     public string itemName;
+    [TextArea]      //한줄을 너머서 그다음줄들까지 명령어 입력 가능
+    public string itemDescription;  //아이템 설명
     public ItemType itemType;
     public Sprite itemImage;        //image와 달리 캔버스 없이 띄울수있음
     public GameObject itemPrefab;
