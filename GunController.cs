@@ -29,7 +29,7 @@ public class GunController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isActivate)
+        if (isActivate&&!Inventory.isActivated)
         {
             GunFireRateCalc();
             TryFire();

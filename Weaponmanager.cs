@@ -59,7 +59,7 @@ public class Weaponmanager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isChangeWeapon)     //무기 변경중이 아니라면
+        if(!isChangeWeapon&&!Inventory.isActivated)     //무기 변경중이 아니라면
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
                 StartCoroutine(ChangeWeaponCoroutine("HAND", "맨손"));

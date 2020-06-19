@@ -23,7 +23,7 @@ public abstract class CloseWeaponController : MonoBehaviour     //근접무기�
 
     protected void TryAttack()
     {
-        if (Input.GetButton("Fire1"))       //마우스 버튼 클릭&&공격중이 아닐때
+        if (Input.GetButton("Fire1")&&!Inventory.isActivated)       //마우스 버튼 클릭&&공격중이 아닐때
         {
             if (!isAttack)
             {

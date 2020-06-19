@@ -51,11 +51,13 @@ public class playerScript : MonoBehaviour
         TryJump();
         IsRun();       //move함수 위에 있어야 뛰는중인지 걷는중인지 알수있음
         Move();
-        cameraRatation();
-        characterRotation();
         MoveCheck();
+        if (!Inventory.isActivated)
+        {
+            cameraRatation();
+            characterRotation();
+        }                  
     }
-
     void TryCrouch()
     {
         if(Input.GetKey(KeyCode.LeftControl))
