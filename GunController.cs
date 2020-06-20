@@ -12,6 +12,7 @@ public class GunController : MonoBehaviour
     public bool isFineMode = false;        //정조준상태
     AudioSource theAudio;
     RaycastHit hitInfo;             //총알발사시 피격대상 정보저장변수
+    [SerializeField] LayerMask layerMask; //플레이어에는 닿지 못하게하기위해 플레이어를 제외한 레이어마스크만 설정할 예정
     [SerializeField] Camera theCam;     //총알이 1인칭 시점에 맞게 플레이어기준 가운데에서 발사되도록 그 화면을 가져옴
     [SerializeField] GameObject hitEffect;  //피격이펙트
     CrosshairScript theCrosshair;
@@ -85,7 +86,7 @@ public class GunController : MonoBehaviour
     {
         if(Physics.Raycast(theCam.transform.position,
             theCam.transform.forward+new Vector3(Random.Range(-theCrosshair.GetAccuracy()-currentGun.accuracy, theCrosshair.GetAccuracy() + currentGun.accuracy), Random.Range(-theCrosshair.GetAccuracy() - currentGun.accuracy, theCrosshair.GetAccuracy() + currentGun.accuracy),0)
-            ,out hitInfo,currentGun.range))
+            ,out hitInfo,currentGun.range,layerMask))
         {
             //if문 안에 두번째 조건은 플레이어의 행동에 따라(walk,run,idle,fineSight,couch) 정확도를 달리하여 피격당하는 위치에 랜덤값을 줌
             //발사 위치는 절대값이므로 월드좌표계 사용

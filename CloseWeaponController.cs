@@ -10,6 +10,7 @@ public abstract class CloseWeaponController : MonoBehaviour     //근접무기�
     protected bool isAttack = false;
     protected bool isSwing = false;
     protected RaycastHit hitInfo; //가상의 레이저를 발사해서 닿은 물체의 정보를 저장
+    [SerializeField] protected LayerMask layerMask; //플레이어가 레이캐스트에 걸리는것을 방지
 
    
 
@@ -55,7 +56,7 @@ public abstract class CloseWeaponController : MonoBehaviour     //근접무기�
     protected bool CheckObject()
     {
         //가상의 레이저를 자기자신의 위치에서 정면 방향으로 객체의 공격범위만큼 발사. 충돌체가 있으면 true반환
-        if (Physics.Raycast(this.transform.position, transform.forward, out hitInfo, currentCloseWeapon.range))
+        if (Physics.Raycast(this.transform.position, transform.forward, out hitInfo, currentCloseWeapon.range, layerMask))
         {
             Debug.Log(hitInfo.transform.name);
             return true;
