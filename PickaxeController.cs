@@ -22,10 +22,10 @@ public class PickaxeController : CloseWeaponController
             {
                 if (hitInfo.transform.tag == "Rock")
                     hitInfo.transform.GetComponent<RockScript>().Mining();
-                else if (hitInfo.transform.tag == "NPC")
+                else if (hitInfo.transform.tag == "WeakAnimal")
                 {
                     SoundManager.instance.PlaySE("Animal_Hit");
-                    hitInfo.transform.GetComponent<Pig>().Damaged(1, this.transform.position);       //몬스터가 맞았으면 피격이벤트 호출
+                    hitInfo.transform.GetComponent<WeakAnimal>().Damaged(1, this.transform.position);       //몬스터가 맞았으면 피격이벤트 호출, 이중상속을 통해서 하나만 써줘도 됨
                 }
                 isSwing = false;
             }

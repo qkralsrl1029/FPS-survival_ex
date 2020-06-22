@@ -65,11 +65,13 @@ public class Inventory : MonoBehaviour      //인벤토리 스크립트
 
     void OpenInventory()        //인벤토리 창 활성화
     {
+        GameManager.inventoryOpen = true;
         go_inventoryBase.SetActive(true);
     }
 
     void CloseInventory()     //인벤토리 창 비활성화
     {
+        GameManager.inventoryOpen = false;
         go_inventoryBase.SetActive(false);
     }
 }

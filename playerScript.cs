@@ -47,16 +47,19 @@ public class playerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        TryCrouch();
-        TryJump();
-        IsRun();       //move함수 위에 있어야 뛰는중인지 걷는중인지 알수있음
-        Move();
-        MoveCheck();
-        if (!Inventory.isActivated)
+        if (GameManager.canMove)
         {
-            cameraRatation();
-            characterRotation();
-        }                  
+            TryCrouch();
+            TryJump();
+            IsRun();       //move함수 위에 있어야 뛰는중인지 걷는중인지 알수있음
+            Move();
+            MoveCheck();
+            if (!Inventory.isActivated)
+            {
+                cameraRatation();
+                characterRotation();
+            }
+        }
     }
     void TryCrouch()
     {
