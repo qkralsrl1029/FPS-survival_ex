@@ -5,7 +5,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static bool canMove = true;
-    public static bool inventoryOpen = false;
+    public static bool inventoryOpen = false;       //인벤토리창 오픈
+    public static bool isPause = false;             //일시정지창 오픈
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +17,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (inventoryOpen)
+        if (inventoryOpen||isPause) 
         {
             Cursor.lockState = CursorLockMode.None;       
             Cursor.visible = true;

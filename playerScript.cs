@@ -47,7 +47,7 @@ public class playerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.canMove)
+        if (GameManager.canMove&&!GameManager.isPause)
         {
             TryCrouch();
             TryJump();

@@ -52,7 +52,7 @@ public class Inventory : MonoBehaviour      //인벤토리 스크립트
 
     void TryOpen()
     {
-        if(Input.GetKeyDown(KeyCode.I))
+        if(Input.GetKeyDown(KeyCode.I)&&!GameManager.isPause)       //일시정치상태에서는 인벤토리 비활성화
         {
             isActivated = !isActivated;
 
