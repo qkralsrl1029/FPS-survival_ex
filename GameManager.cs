@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (inventoryOpen||isPause) 
+
         {
             Cursor.lockState = CursorLockMode.None;       
             Cursor.visible = true;

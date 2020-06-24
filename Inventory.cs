@@ -9,6 +9,18 @@ public class Inventory : MonoBehaviour      //인벤토리 스크립트
     [SerializeField] GameObject go_inventoryBase;   //베이스
     [SerializeField] GameObject go_SlotParents;     //그리드 레이아웃
     Slot[] slots;                                   //슬롯들(총 20개)
+
+    public Slot[] GetSlot(){return slots; }
+
+    [SerializeField] Item[] items;
+    public void LoadToInven(int arrayNum, string itemName, int itemNum)
+    {
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i].itemName == itemName)
+                slots[arrayNum].addItem(items[i], itemNum);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {

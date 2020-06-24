@@ -5,7 +5,7 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] GameObject go_Base;
-    
+    [SerializeField] SavenLoad theSave;
 
     // Update is called once per frame
     void Update()
@@ -35,11 +35,11 @@ public class PauseMenu : MonoBehaviour
 
     public void ClickSave()
     {
-        
+        theSave.SaveData();
     }
     public void ClickLoad()
     {
-
+        theSave.LoadData();
     }
     public void ClickExit()
     {
