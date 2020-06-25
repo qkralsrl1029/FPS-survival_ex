@@ -12,13 +12,13 @@ public class Inventory : MonoBehaviour      //인벤토리 스크립트
 
     public Slot[] GetSlot(){return slots; }
 
-    [SerializeField] Item[] items;
-    public void LoadToInven(int arrayNum, string itemName, int itemNum)
+    [SerializeField] Item[] items;                  //모든 아이템들의 정보 저장(로드할때 세이브데이터와 이름을 비교해서 같은이름의 아이템 넣어줌)
+    public void LoadToInven(int arrayNum, string itemName, int itemNum)     //로드함수에서 호출
     {
         for (int i = 0; i < items.Length; i++)
         {
-            if (items[i].itemName == itemName)
-                slots[arrayNum].addItem(items[i], itemNum);
+            if (items[i].itemName == itemName)              //이름이같은 아이템이 있으면
+                slots[arrayNum].addItem(items[i], itemNum);//저장된 배열순서,아이템 이름,아이템 개수에맞게 저장
         }
     }
     // Start is called before the first frame update
